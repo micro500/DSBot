@@ -10,7 +10,7 @@ NET en             LOC="P51"  | IOSTANDARD=LVTTL;                               
 NET do             LOC="P58"  | IOSTANDARD=LVTTL;                                # A3
 NET sclk           LOC="P134" | IOSTANDARD=LVTTL;                                # C15
 
-NET l(3)           LOC="P114" | IOSTANDARD=LVTTL;                                # C0
-NET l(2)           LOC="P116" | IOSTANDARD=LVTTL;                                # C2
-NET l(1)           LOC="P118" | IOSTANDARD=LVTTL;                                # C4
-NET l(0)           LOC="P120" | IOSTANDARD=LVTTL;                                # C6
+#NET l(3)           LOC="P114" | IOSTANDARD=LVTTL;                                # C0
+#NET l(2)           LOC="P116" | IOSTANDARD=LVTTL;                                # C2
+#NET l(1)           LOC="P118" | IOSTANDARD=LVTTL;                                # C4
+#NET l(0)           LOC="P120" | IOSTANDARD=LVTTL;                                # C6

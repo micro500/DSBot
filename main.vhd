@@ -13,32 +13,32 @@ end main;
 architecture Behavioral of main is
   component command_responder is
        Port ( clk : in  STD_LOGIC;
+       
            x_val : in  STD_LOGIC_VECTOR (15 downto 0);
            y_val : in  STD_LOGIC_VECTOR (15 downto 0);
-           frame_flag : out  STD_LOGIC;
+           cmd : out STD_LOGIC_VECTOR (7 downto 0);
+           cmd_flag : out STD_LOGIC;
            
            sclk : in  STD_LOGIC;
            en : in  STD_LOGIC;
            di : in  STD_LOGIC;
-           do : out  STD_LOGIC;
-           
-           l : out STD_LOGIC_VECTOR(3 downto 0));
+           do : out  STD_LOGIC);
    end component;
    
-   signal x_val : STD_LOGIC_VECTOR (15 downto 0);
-   signal y_val : STD_LOGIC_VECTOR (15 downto 0);
-   signal frame_flag : STD_LOGIC;
-   
+   signal x_val : STD_LOGIC_VECTOR (15 downto 0) := X"CCCC";
+   signal y_val : STD_LOGIC_VECTOR (15 downto 0) := X"5555";
+   signal cmd_flag : STD_LOGIC;
+   signal cmd : STD_LOGIC_VECTOR (7 downto 0);
 begin
   cmd_handler: command_responder port map (clk => clk,
                                            x_val => x_val,
                                            y_val => y_val,
-                                           frame_flag => frame_flag,
+                                           cmd_flag => cmd_flag,
+                                           cmd => cmd,
                                            sclk => sclk,
                                            en => en,
                                            di => di,
-                                           do => do,
-                                           l => l);
+                                           do => do);
 
 end Behavioral;
 

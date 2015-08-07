@@ -5,15 +5,17 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity command_responder is
     Port ( clk : in  STD_LOGIC;
+    
            x_val : in  STD_LOGIC_VECTOR (15 downto 0);
            y_val : in  STD_LOGIC_VECTOR (15 downto 0);
-           frame_flag : out  STD_LOGIC;
+           
+           cmd : out STD_LOGIC_VECTOR (7 downto 0);
+           cmd_flag : out STD_LOGIC;
            
            sclk : in  STD_LOGIC;
            en : in  STD_LOGIC;
            di : in  STD_LOGIC;
-           do : out  STD_LOGIC;
-           l : out STD_LOGIC_VECTOR(3 downto 0));
+           do : out  STD_LOGIC);
 end command_responder;
 
 architecture Behavioral of command_responder is
@@ -26,10 +28,6 @@ architecture Behavioral of command_responder is
   
   signal en_buf : std_logic_vector(2 downto 0) := "111";
   signal sclk_buf : std_logic_vector(2 downto 0) := "111";
-  
-  signal y_counter : integer range 0 to 5 := 0;
-  
-  signal frame_completed : std_logic := '0';
   
   signal debug : std_logic := '0';
 begin
@@ -45,8 +43,6 @@ begin
         out_buffer <= "00000000000000000";
         prev_en <= '0';
       elsif (en_buf = "111" and prev_en = '0') then
-        y_counter <= 0;
-        frame_completed <= '0';
         prev_en <= '1';
       end if;
       
@@ -60,27 +56,25 @@ begin
           
         -- Rising edge of sclk
         elsif (sclk_buf = "111" and prev_sclk = '0') then
+          cmd_flag <= '0';
           in_buffer <= in_buffer(6 downto 0) & di;
           prev_sclk <= '1';
           debug <= not debug;
         end if;
-
-        if (in_buffer = X"84") then
-          in_buffer <= "00000000";
-          out_buffer <= '0' & "0001011101000000";
-        elsif (in_buffer = X"D1") then
-          in_buffer <= "00000000";
-          out_buffer <= '0' & "0101110110011000";
-        elsif (in_buffer = X"91") then
-          in_buffer <= "00000000";
-          out_buffer <= '0' & "0100010101011000";
-          if (frame_completed = '0') then
-            if (y_counter = 5) then
-              frame_completed <= '1';
-            else
-              y_counter <= y_counter + 1;
-            end if;
+        
+        if (in_buffer = X"84" or in_buffer = X"D1" or in_buffer = X"91") then
+          if (in_buffer = X"84") then
+            out_buffer <= '0' & "0001011101000000";
+          elsif (in_buffer = X"D1") then
+            out_buffer <= '0' & x_val;
+          elsif (in_buffer = X"91") then
+            out_buffer <= '0' & y_val;
           end if;
+          
+          cmd <= in_buffer;
+          cmd_flag <= '1';
+          in_buffer <= "00000000";
+          
         end if;
       end if;
     end if;
@@ -89,8 +83,5 @@ begin
   do <= out_buffer(16) when en = '0'
         else '1';
         
-  l <= debug & in_buffer(2 downto 0);
-        
-  frame_flag <= frame_completed;
 end Behavioral;
 

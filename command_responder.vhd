@@ -6,8 +6,8 @@ use IEEE.NUMERIC_STD.ALL;
 entity command_responder is
     Port ( clk : in  STD_LOGIC;
     
-           x_val : in  STD_LOGIC_VECTOR (15 downto 0);
-           y_val : in  STD_LOGIC_VECTOR (15 downto 0);
+           x_val : in  STD_LOGIC_VECTOR (11 downto 0);
+           y_val : in  STD_LOGIC_VECTOR (11 downto 0);
            
            cmd : out STD_LOGIC_VECTOR (7 downto 0);
            cmd_flag : out STD_LOGIC;
@@ -66,9 +66,9 @@ begin
           if (in_buffer = X"84") then
             out_buffer <= '0' & "0001011101000000";
           elsif (in_buffer = X"D1") then
-            out_buffer <= '0' & x_val;
+            out_buffer <= "00" & x_val & "000";
           elsif (in_buffer = X"91") then
-            out_buffer <= '0' & y_val;
+            out_buffer <= "00" & y_val & "000";
           end if;
           
           cmd <= in_buffer;
@@ -81,7 +81,7 @@ begin
   end process;
 
   do <= out_buffer(16) when en = '0'
-        else '1';
+        else 'Z';
         
 end Behavioral;
 

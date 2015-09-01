@@ -53,6 +53,10 @@ architecture Behavioral of main is
    signal wait_frame_end : std_logic := '0';
    signal btn_buffer : std_logic_vector (7 downto 0) := "00000000";
    signal prev_btn : std_logic := '0';
+   
+   signal frame_timer : integer range 0 to 160000 := 0;
+   signal frame_timer_active : std_logic := '0';
+   signal frame_toggle : std_logic := '0';
 begin
   cmd_handler: command_responder port map (clk => clk,
                                            x_val => x_val,
@@ -67,12 +71,13 @@ begin
   process (clk) is
   begin
     if (clk'event and clk = '1') then
-      if (cmd_flag = '1' and prev_cmd_flag = '0') then
-        prev_cmd_flag <= '1';
-        if (cmd = X"91") then
-          wait_frame_end <= '1';
-        elsif (cmd = X"84" and wait_frame_end = '1') then
-          wait_frame_end <= '0';
+      if (frame_timer_active = '1') then
+        if (frame_timer = 160000) then
+          frame_timer <= 0;
+          frame_timer_active <= '0';
+          
+          frame_toggle <= not frame_toggle;
+          
           -- move to the next entry in the buffer
           if (queue_active = '1') then
             if (buffer_head = 4) then
@@ -82,7 +87,16 @@ begin
               buffer_head <= buffer_head + 1;
             end if;
           end if;
-            -- move head forward
+        else
+          frame_timer <= frame_timer + 1;
+        end if;
+      end if;
+    
+      if (cmd_flag = '1' and prev_cmd_flag = '0') then
+        prev_cmd_flag <= '1';
+        if (cmd = X"84") then
+          frame_timer <= 0;
+          frame_timer_active <= '1';
         end if;
       
       elsif (cmd_flag = '0' and prev_cmd_flag = '1') then
@@ -105,7 +119,7 @@ begin
         
         x_buffer(2) <= 2286;
         y_buffer(2) <= 2081;
-        touch_buf(2) <= '0';
+        touch_buf(2) <= '1';
         
         x_buffer(3) <= 1586;
         y_buffer(3) <= 2081;
@@ -114,6 +128,9 @@ begin
         x_buffer(4) <= 1586;
         y_buffer(4) <= 2081;
         touch_buf(4) <= '0';
+        
+        frame_timer <= 0;
+        frame_timer_active <= '0';
                 
         prev_btn <= '1';
       elsif (prev_btn = '1' and btn_buffer = "00000000") then

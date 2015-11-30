@@ -3,19 +3,25 @@ CONFIG PROHIBIT=P69;
 CONFIG PROHIBIT=P60;
 
 NET CLK            LOC="P94"  | IOSTANDARD=LVTTL | PERIOD=31.25ns;               # CLK
-#NET RX             LOC="P101" | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # RX
-#NET TX             LOC="P105" | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST | PULLUP; # TX
-NET di             LOC="P48"  | IOSTANDARD=LVTTL;                                # A0
-NET en             LOC="P51"  | IOSTANDARD=LVTTL;                                # A1
-NET pen_irq        LOC="P56"  | IOSTANDARD=LVTTL;                                # A2
-NET do             LOC="P58"  | IOSTANDARD=LVTTL;                                # A3
-NET en_out         LOC="P61"  | IOSTANDARD=LVTTL;                                # A4
-NET sclk           LOC="P134" | IOSTANDARD=LVTTL;                                # C15
+NET RX             LOC="P101" | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST;          # RX  # from PC
+NET TX             LOC="P105" | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=FAST | PULLUP; # TX  # to PC
+NET di             LOC="P48"  | IOSTANDARD=LVTTL;                                # A0  # from DS # orange
+NET en             LOC="P51"  | IOSTANDARD=LVTTL;                                # A1  # from DS # red
+NET pen_irq        LOC="P56"  | IOSTANDARD=LVTTL;                                # A2  # to DS
+NET do             LOC="P58"  | IOSTANDARD=LVTTL;                                # A3  # to DS
+NET en_out         LOC="P61"  | IOSTANDARD=LVTTL;                                # A4  # to TC
+NET sclk           LOC="P134" | IOSTANDARD=LVTTL;                                # C15 # from DS # brown
 
-#NET l(3)           LOC="P114" | IOSTANDARD=LVTTL;                                # C0
-#NET l(2)           LOC="P116" | IOSTANDARD=LVTTL;                                # C2
-#NET l(1)           LOC="P118" | IOSTANDARD=LVTTL;                                # C4
-#NET l(0)           LOC="P120" | IOSTANDARD=LVTTL;                                # C6
+# blue (ribbon) - pen IRQ to DS
 
-NET btn            LOC="P121" | IOSTANDARD=LVTTL;                                # C7 
+# Connect A3 to yellow (ribbon)
+# Connect A2 to blue (ribbon)
+
+
+NET l(3)           LOC="P114" | IOSTANDARD=LVTTL;                                # C0
+NET l(2)           LOC="P116" | IOSTANDARD=LVTTL;                                # C2
+NET l(1)           LOC="P118" | IOSTANDARD=LVTTL;                                # C4
+NET l(0)           LOC="P120" | IOSTANDARD=LVTTL;                                # C6
+
+#NET btn            LOC="P121" | IOSTANDARD=LVTTL;                                # C7 
 NET dis_btn        LOC="P119" | IOSTANDARD=LVTTL;                                # C5
